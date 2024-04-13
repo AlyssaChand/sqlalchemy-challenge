@@ -122,7 +122,7 @@ def temperature_start(start):
     # Return a JSON list of the minimum temperature, the average temperature, and the maximum temperature for a specified start or start-end range.
     # For a specified start, calculate TMIN, TAVG, and TMAX for all the dates greater than or equal to the start date.
     most_recent_date = session.query(Measurement.date).order_by(Measurement.date.desc()).first()
-    year_from_last_date = dt.date(2017, 8, 23) - dt.timedelta(days=365)
+    start_date = dt.datetime.strptime(start, "%Y-%m-%d")
     temperature_stats = session.query(func.min(Measurement.tobs), func.max(Measurement.tobs), func.avg(Measurement.tobs)).\
         filter(Measurement.date >= start).all()
     
@@ -131,7 +131,7 @@ def temperature_start(start):
     
     temperature_start_list = []
     for min, max, avg in temperature_stats:
-        temperature_start_list.append({"start date": year_from_last_date.strftime('%Y/%m/%d'), "end date": most_recent_date[0], 
+        temperature_start_list.append({"start date": start_date.strftime("%Y-%m-%d"), "end date": most_recent_date[0], 
                                        "minimum temperature": min, "maximum temperature": max, "average temperature": avg})
         
 
@@ -142,6 +142,7 @@ def temperature_start_end(start, end):
     # Create our session (link) from Python to the DB
     session = Session(engine)
 
+    # Return a JSON list
     # For a specified start date and end date, calculate TMIN, TAVG, and TMAX for the dates from the start date to the end date, inclusive.
     start_date = dt.datetime.strptime(start, "%Y-%m-%d")
     end_date = dt.datetime.strptime(end, "%Y-%m-%d")
