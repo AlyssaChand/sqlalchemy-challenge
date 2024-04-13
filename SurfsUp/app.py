@@ -1,7 +1,6 @@
 # Import the dependencies.
 
 import datetime as dt
-import numpy as np
 
 import sqlalchemy
 from sqlalchemy.ext.automap import automap_base
@@ -39,6 +38,8 @@ app = Flask(__name__)
 # Flask Routes
 #################################################
 
+# Homepage
+# List all the available routes.
 @app.route("/")
 def home():
     """List all available api routes."""
@@ -53,6 +54,7 @@ def home():
         f"/api/v1.0/<start>/<end>"
     )
 
+# precipitation route
 @app.route("/api/v1.0/precipitation")
 def precipitation():
     # Create our session (link) from Python to the DB
@@ -68,10 +70,11 @@ def precipitation():
     # Return the JSON representation of your dictionary
     precipitation_list = []
     for date, prcp in precipitation:
-        precipitation_list.append({"date": date, "prcp": prcp})
+        precipitation_list.append({"date": date, "precipitation": prcp})
 
     return jsonify(precipitation_list)
 
+# stations route
 @app.route("/api/v1.0/stations")
 def stations():
     # Create our session (link) from Python to the DB
@@ -90,6 +93,7 @@ def stations():
 
     return jsonify(station_list)
 
+# tobs route
 @app.route("/api/v1.0/tobs")
 def tobs():
     # Create our session (link) from Python to the DB
@@ -114,6 +118,7 @@ def tobs():
 
     return jsonify(temperature_list)
 
+# start route
 @app.route("/api/v1.0/<start>")
 def temperature_start(start):
     # Create our session (link) from Python to the DB
@@ -137,6 +142,7 @@ def temperature_start(start):
 
     return jsonify(temperature_start_list)
 
+# start/end route
 @app.route("/api/v1.0/<start>/<end>")
 def temperature_start_end(start, end):
     # Create our session (link) from Python to the DB
@@ -159,5 +165,6 @@ def temperature_start_end(start, end):
 
     return jsonify(temperature_start_end_list)
 
+# Run the app
 if __name__ == "__main__":
     app.run(debug=True)
